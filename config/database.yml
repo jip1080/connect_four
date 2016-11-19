@@ -1,14 +1,13 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  database: connect_four
-  username: <%= ENV['DB_USER'] %>
-  password: <%= ENV['DB_PASS'] %>
   pool: 5
   timeout: 5000
 
 development:
   <<: *default
+  username: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASS'] %>
   database: connect_four_dev
 
 # Warning: The database defined as "test" will be erased and
@@ -17,7 +16,3 @@ development:
 test:
   <<: *default
   database: connect_four_test
-
-production:
-  <<: *default
-  database: connect_four_prod
