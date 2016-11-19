@@ -10,11 +10,7 @@ describe Board do
         valid_col.times { new_board << ("0" * valid_row) }
       end
     end
-    let(:new_board_object) do
-      b = Board.new(rows: valid_row, columns: valid_col)
-      b.save!
-      b
-    end
+    let(:new_board_object) { FactoryGirl.create(:board, rows: valid_row, columns: valid_col) }
 
     it 'requires a greater-than-zero row size' do
       expect { Board.new(rows: -10, columns: 2).save! }.to raise_error ActiveRecord::RecordInvalid
@@ -26,6 +22,15 @@ describe Board do
 
     it 'automatically builds the board to the row/column sizes' do
       expect(new_board_object.board).to match_array(valid_board)
+    end
+  end
+
+  context '#available_columns' do
+    let(:board) { FactoryGirl.create(:board, rows: 4, columns: 4) }
+
+    it 'returns the only the open columns' do
+      board.board = ["0000", "1212", "1234", "0121"]
+      expect(board.available_columns).to match_array([0,3])
     end
   end
 end
