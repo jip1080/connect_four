@@ -1,5 +1,7 @@
 class Board < ActiveRecord::Base
 
+  belongs_to :game
+
   validates :rows,    numericality: { only_integer: true, greater_than: 0 }
   validates :columns, numericality: { only_integer: true, greater_than: 0 }
 
