@@ -4,6 +4,8 @@ require File.dirname(__FILE__) + '/../rails_helper'
 describe Game do
   let!(:game) { FactoryGirl.create(:game) }
 
+  let!(:board) { FactoryGirl.create(:board, game: game) }
+
   let!(:player1) { FactoryGirl.create(:player, name: 'player1') }
   let!(:player2) { FactoryGirl.create(:player, name: 'player2') }
   let!(:player3) { FactoryGirl.create(:player, name: 'player3') }
@@ -49,6 +51,16 @@ describe Game do
         .to change(game, :turn)
         .from(2)
         .to(0)
+    end
+  end
+
+  context '#update_board' do
+    it 'rotates the turn after updating the board' do
+      cur_turn = game.turn
+      expect { game.update_board({col: "2"}) }
+        .to change(game, :turn)
+        .from(cur_turn)
+        .to(cur_turn + 1 % 3)
     end
   end
 end
