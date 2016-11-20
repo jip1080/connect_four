@@ -6,5 +6,7 @@ class WelcomeController < ApplicationController
                    else
                      []
                    end
+  rescue => ex
+    Rails.logger.error ex
   end
 end
