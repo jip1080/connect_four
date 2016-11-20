@@ -1,5 +1,10 @@
 class WelcomeController < ApplicationController
   def index
-    @leaderboard = Player.all.sort_by { |p| p.wins.count }.reverse
+    players = Player.all
+    @leaderboard = if players.any?
+                     players.all.sort_by { |p| p.wins.count }.reverse
+                   else
+                     []
+                   end
   end
 end
