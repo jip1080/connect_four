@@ -1,7 +1,39 @@
 <script type="text/javascript">
   $(document).ready(function() {
+      
+      selectColor = function(player_number) {
+        switch(player_number) {
+          case 1:
+            color = 'red';
+            break;
+          case 2:
+            color = 'black';
+            break;
+          default:
+            color = 'white';
+        };
+        return color;
+      };
+
+      colorizeToken = function(col, row, player_number) {
+        token_id = '#token_' + col + '_' + row;
+        console.log(token_id);
+        $(token_id).removeClass('red white black');
+        $(token_id).addClass(selectColor(player_number));
+      };
+
+      updateTurnName = function(turn_name) {
+        $('#player_turn').innerText = turn_name;
+      };
+
+      setWinCondition = function() {
+        $('.column-select').prop('disabled', true);
+        $('#winner_name')[0].innerText = $('#player_turn')[0].innerText;
+        $('#winner').prop('disabled', false);
+        $('#status')[0].innerText = 'Completed';
+      };
+
       $('.column-select').click(function(e) {
-        console.log("id: " + this.id);
         $.ajax
         ({
           url: '<%=@game.id%>/update_board',
@@ -9,7 +41,12 @@
           type: 'post',
           success: function(result)
           {
-            console.log("woo hoo!");
+            colorizeToken(result.column, result.row, result.player_number);
+            if(result.win_condition === true) {
+              setWinCondition();
+            } else {
+              updateTurnName(result.player_turn);
+            }
           }
          });
         });
@@ -19,62 +56,62 @@
   Game:
 </h1>
 <hr>
-<div style="float:left">
-  <div style="float:left">
+<div class='float'>
+  <div class='float'>
     <a href='/'>Home</a>
   </div>
-  <div style="float:left">
+  <div class='float'>
     <a href='/games/new'>New Game</a>
   </div>
-  <div style="float:left">
+  <div class='float'>
     <a href='/players/new'>New Player</a>
   </div>
 </div>
-<div style="clear:both"></div>
+<div class='clear'></div>
 <hr>
 
-<div style="float:left">
-  <div style="float:left; width:55px">
+<div class='float'>
+  <div class='float' style='width:55px'>
     <label>ID</label>
     <h3><%= @game.id %></h3>
   </div>
-  <div style="float:left; width:100px">
+  <div class='float' style='width:100px'>
     <label>Status</label>
-    <h3><%= @game.status %></h3>
+    <h3 id='status'><%= @game.status %></h3>
   </div>
-  <div style="float:left; width:200px">
+  <div class='float' style='width:200px'>
     <label>Turn</label>
-    <h3><%= @game.current_player.name %></h3>
+    <h3 id='player_turn'><%= @game.current_player.name %></h3>
   </div>
-  <% if @game.completed? %>
-    <div style="float:left; width:200px">
-      <label>Winner</label>
-      <h3><%= @game.winner.name %></h3>
-    </div>
-  <% end %>
+  <div class='float' id='winner' style='width:200px' disabled>
+    <label>Winner</label>
+    <h3 id='winner_name'></h3>
+  </div>
 </div>
-<div style="clear:both"></div>
-<div>
+<div class='clear'></div>
 <hr>
-</div>
 
 <div class="board">
   <% @game.board.board.each_with_index do |col, index| %>
-    <div style="float:left">
+    <div class='float'>
       <div>
-        <input class='column-select' type='button' id='<%=index%>' value='SELECT ME!'/>
+        <input class='column-select' id='<%=index%>'/>
       </div>
+      <div class='vertical-line'>
       <% i = 0 %>
       <% while (i < col.length) %>
         <% color = case col[i] %>
-      <% when '1'; 'red' %>
-      <% when '2'; 'black' %>
-      <% when '3'; 'blue' %>
-      <% else; 'white' %>
-      <% end %>
-      <div style="border-radius:50%; width:50px; height:50px; background:<%= color %>; border: 3px solid <%= color %>;"><%= col[i] %></div>
+        <% when '1'; 'red' %>
+        <% when '2'; 'black' %>
+        <% when '3'; 'blue' %>
+        <% else; 'white' %>
+        <% end %>
+        <div class='horizontal-line'>
+          <div class='token <%=color%>' id='token_<%=index%>_<%=i%>'></div>
+        </div>
         <% i += 1 %>
       <% end %>
+    </div>
     </div>
   <% end %>
 </div>

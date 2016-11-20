@@ -39,6 +39,7 @@ class Board < ActiveRecord::Base
     row_index = board[col].rindex("0")
     board[col][row_index] = player_number.to_s
     self.save
+    return col, row_index
   end
 
   def win_detected?

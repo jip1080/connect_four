@@ -27,10 +27,21 @@ class GamesController < ApplicationController
 
   def update_board
     game = Game.find(params[:game_id])
-    game.update_board(update_board_params)
-    render json: {"status": "success"}
+    player_num = game.current_player_number
+    col, row = game.update_board(update_board_params)
+    response1 = {
+      'status': 'success',
+      'column': col,
+      'row': row,
+      'player_number': player_num,
+      'player_turn': game.current_player.name,
+      'win_condition': game.completed?
+    }
+
+    render json: response1
   rescue => ex
-    render json: {"status": "failed"}
+    binding.pry
+    render json: {'status': 'failed'}
   end
 
   private

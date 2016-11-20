@@ -29,7 +29,7 @@ class Game < ActiveRecord::Base
 
   def update_board(play_hash)
     fail GameOverError unless active?
-    board.do_move(current_player_number, play_hash)
+    col, row = board.do_move(current_player_number, play_hash)
     if board.win_detected?
       self.completed!
       self.winner = game_players.find { |gp| gp.player_number == board.winner.to_i }.player
@@ -37,6 +37,7 @@ class Game < ActiveRecord::Base
       rotate_turn
     end
     self.save!
+    return col, row
   rescue Board::InvalidMoveError => ex
     Rails.logger.error "Player: #{current_player_number} attempted illegal move"
     raise
