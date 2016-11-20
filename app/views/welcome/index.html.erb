@@ -1,1 +1,37 @@
-HELLO WORLD!
+<div>
+  <h1>Welcome to Connect IV</h1>
+</div>
+<hr>
+
+<div style="float:left">
+  <div style="float:left">
+    <a href='/games/new'>New Game</a>
+  </div>
+  <div style="float:left">
+    <a href='/players/new'>New Player</a>
+  </div>
+</div>
+<div style="clear:both"></div>
+<hr>
+
+<div>
+  <h2>Leader Board</h2>
+  <table >
+    <tr>
+      <th>Place</th>
+      <th>Player</th>
+      <th>Wins</th>
+    </tr>
+    <% @leaderboard.each_with_index do |player, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td>
+          <a href='/players/<%= player.id %>'>
+            <%= player.name %>
+          </a>
+        </td>
+        <td><%= player.wins.count %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
