@@ -75,4 +75,84 @@ describe Board do
       expect { board.do_move(1, {col: "cat"}) }.to raise_error Board::InvalidMoveError
     end
   end
+
+  context 'win checking' do
+    context 'simple 4x4 board' do
+      let(:board) { FactoryGirl.create(:board, rows: 4, columns: 4) }
+
+      it 'returns false when no win-condition is present' do
+        board.board = ["0000", "0000", "0000", "0000"]
+        board.save!
+        expect(board.win_detected?).to be_falsey
+      end
+
+      it 'returns true for a column-win condition' do
+        board.board = ["0000", "1111", "0000", "0000"]
+        board.save!
+        expect(board.win_detected?).to be_truthy
+      end
+
+      it 'returns true for a row-win condition' do
+        board.board = ["0001", "0001", "0001", "0001"]
+        board.save!
+        expect(board.win_detected?).to be_truthy
+      end
+
+      it 'returns true for a forward diagonal win condition' do
+        board.board = ["0001", "0010", "0100", "1000"]
+        board.save!
+        expect(board.win_detected?).to be_truthy
+      end
+
+      it 'returns true for a backward diagonal win condition' do
+        board.board = ["1000", "0100", "0010", "0001"]
+        board.save!
+        expect(board.win_detected?).to be_truthy
+      end
+    end
+
+    context 'complex 9x11 board' do
+      let(:board) { FactoryGirl.create(:board, rows: 9, columns: 11) }
+
+      it 'returns false when no win-condition is present' do
+        board.board = ["000000000","000000000","000000000","000000000",
+          "000000000","000000000","000000000","000000000",
+          "000000000","000000000","000000000"]
+        board.save!
+        expect(board.win_detected?).to be_falsey
+      end
+
+      it 'returns true for a column-win condition' do
+        board.board = ["000000000","000000000","000001111","000000000",
+          "000000000","000000000","000000000","000000000",
+          "000000000","000000000","000000000"]
+        board.save!
+        expect(board.win_detected?).to be_truthy
+      end
+
+      it 'returns true for a row-win condition' do
+        board.board = ["000000000","000000000","000000001","000000001",
+          "000000001","000000001","000000000","000000000",
+          "000000000","000000000","000000000"]
+        board.save!
+        expect(board.win_detected?).to be_truthy
+      end
+
+      it 'returns true for a forward diagonal win condition' do
+        board.board = ["000000000","000000000","000000000","000000000",
+          "000000001","000000010","000000100","000001000",
+          "000000000","000000000","000000000"]
+        board.save!
+        expect(board.win_detected?).to be_truthy
+      end
+
+      it 'returns true for a backward diagonal win condition' do
+        board.board = ["000000000","000000000","000000000","000000000",
+          "000001000","000000100","000000010","000000001",
+          "000000000","000000000","000000000"]
+        board.save!
+        expect(board.win_detected?).to be_truthy
+      end
+    end
+  end
 end
