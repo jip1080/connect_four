@@ -1,0 +1,47 @@
+<h1>
+  Games
+</h1>
+<hr>
+<div style="float:left">
+  <div style="float:left">
+    <a href='/'>Home</a>
+  </div>
+  <div style="float:left">
+    <a href='/games/new'>New Game</a>
+  </div>
+  <div style="float:left">
+    <a href='/players/new'>New Player</a>
+  </div>
+</div>
+<div style="clear:both"></div>
+<hr>
+<table>
+  <tr>
+    <th>
+      <h2>ID</h2>
+    </th>
+    <th>
+      <h2>Status</h2>
+    </th>
+    <th>
+      <h2>Winner</h2>
+    </th>
+  </tr>
+  <% @games.each do |game| %>
+    <tr>
+      <td>
+        <%= game.id %>
+      </td>
+      <td>
+        <%= game.status.upcase %>
+      </td>
+      <td>
+        <% if game.completed? %>
+          <%= game.winner.name %>
+        <% else %>
+          N/A
+        <% end %>
+    </tr>
+  <% end %>
+</table>
+

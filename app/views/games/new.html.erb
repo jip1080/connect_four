@@ -1,0 +1,37 @@
+<h1>
+  New Game:
+</h1>
+<hr>
+<div style="float:left">
+  <div style="float:left">
+    <a href='/'>Home</a>
+  </div>
+  <div style="float:left">
+    <a href='/games/new'>New Game</a>
+  </div>
+  <div style="float:left">
+    <a href='/players/new'>New Player</a>
+  </div>
+</div>
+<div style="clear:both"></div>
+<hr>
+<form action="/games" method="post">
+  <label>Rows:</label>
+  <input name="rows"/>
+  <label>Columns:</label>
+  <input name="columns"/>
+  <label>Player1:</label>
+  <select name="player1" id="player1">
+    <% @players.each do |player| %>
+      <option value="<%= player.id %>"><%= player.name %></option>
+    <% end %>
+  </select>
+  <label>Player2:</label>
+  <select name="player2" id="player2">
+    <% @players.each do |player| %>
+      <option value="<%= player.id %>"><%= player.name %></option>
+    <% end %>
+  </select>
+  <input value="Start!" type="submit"/>
+</form>
+<hr>
