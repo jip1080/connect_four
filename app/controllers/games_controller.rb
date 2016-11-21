@@ -40,7 +40,6 @@ class GamesController < ApplicationController
 
     render json: response1
   rescue => ex
-    binding.pry
     render json: {'status': 'failed'}
   end
 
