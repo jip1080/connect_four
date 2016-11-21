@@ -1,13 +1,22 @@
-<h1>
-  Players:
-</h1>
-<hr>
-
-<div>
-  <label>ID</label>
-  <h3><%= @player.id %></h3>
-</div>
-<div>
-  <label>NAME</label>
+<div class='float'>
+  <div class='float'>NAME</div>
   <h3><%= @player.name %></h3>
+</div>
+<div class='float' style="padding: 0vw 3vw">
+  <div class='float'>Wins:</div>
+  <h3><%= @player.wins.count %></h3>
+</div>
+<div class='clear'></div>
+<div class='float'>
+  <h3>Last 10 Wins:</h3>
+  <table>
+    <tr>
+      <th>Game ID</th>
+    </tr>
+    <% @player.wins.order(id: :desc).limit(10).each do |win| %>
+      <tr>
+        <td><a href='/games/<%= win.id %>'><%= win.id %></a></td>
+      </tr>
+    <% end %>
+  </table>
 </div>
