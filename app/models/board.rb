@@ -21,7 +21,7 @@ class Board < ActiveRecord::Base
     fail NotImplmentedError, '#do_move was not defined'
   end
 
-  def win_detected?
+  def win_detected?(player_number)
     fail NotImplmentedError, '#win_detected? was not defined'
   end
 

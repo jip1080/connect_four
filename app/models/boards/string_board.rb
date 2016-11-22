@@ -37,7 +37,7 @@ module Boards
       return col, row_index
     end
 
-    def win_detected?
+    def win_detected?(player_number)
       column_winner? ||
         row_winner? ||
         forward_diagonal_winner? ||
