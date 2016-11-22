@@ -17,13 +17,13 @@ ActiveRecord::Schema.define(version: 20161121235216) do
   enable_extension "plpgsql"
 
   create_table "boards", force: :cascade do |t|
-    t.integer  "rows",                               null: false
-    t.integer  "columns",                            null: false
-    t.string   "board",      default: [],                         array: true
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.integer  "rows",                                       null: false
+    t.integer  "columns",                                    null: false
+    t.string   "board",      default: [],                                 array: true
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.integer  "game_id"
-    t.string   "type",       default: "StringBoard", null: false
+    t.string   "type",       default: "Boards::StringBoard", null: false
   end
 
   add_index "boards", ["game_id"], name: "index_boards_on_game_id", using: :btree

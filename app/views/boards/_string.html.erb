@@ -1,0 +1,23 @@
+  <% game.board.board.each_with_index do |col, index| %>
+    <div class='float'>
+      <div>
+        <input class='column-select' id='<%=index%>'/>
+      </div>
+      <div class='vertical-line'>
+      <% i = 0 %>
+      <% while (i < col.length) %>
+        <% color = case col[i] %>
+        <% when '1'; 'red' %>
+        <% when '2'; 'black' %>
+        <% when '3'; 'blue' %>
+        <% else; 'white' %>
+        <% end %>
+        <div class='horizontal-line'>
+          <div class='token <%=color%>' id='token_<%=index%>_<%=i%>'></div>
+        </div>
+        <% i += 1 %>
+      <% end %>
+    </div>
+    </div>
+  <% end %>
+

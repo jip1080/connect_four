@@ -9,7 +9,7 @@ class GamesController < ApplicationController
 
   # TODO: make this not crappy
   def create
-    b = Boards::StringBoard.new(rows: params[:rows].to_i, columns: params[:columns].to_i)
+    b = Boards::BitBoard.new(rows: params[:rows].to_i, columns: params[:columns].to_i)
     b.save!
     g = Game.new(board: b)
     g.save!
