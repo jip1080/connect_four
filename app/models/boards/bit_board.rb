@@ -37,19 +37,19 @@ module Boards
     end
 
     def do_move(player_number, play_hash)
-      @move = play_hash['col']
+      @move = play_hash['col'].to_i
       fail InvalidMoveError unless valid_move?
       closed_rows = closed_rows_in_column
       row_board, row_index = find_first_open_row_in_column(closed_rows)
       move_board = row_board & col_bitboard_for(@move)
       board[0] = board[0].to_i + move_board
-      board[player_number] = board[player_number] + move_board
+      board[player_number] = board[player_number].to_i + move_board
       self.save
       return @move, row_index
     end
 
     def win_detected?(player_number)
-      @player_board = board[player_number] >> rows
+      @player_board = board[player_number].to_i
       if forward_diagonal_winner? ||
         backward_diagonal_winner? ||
         column_winner? ||
@@ -61,26 +61,38 @@ module Boards
     end
 
     def forward_diagonal_winner?
-      return true if (@player_board & (@player_board >> (2 * (rows + 2))))  # / check
+      # / check as data is represented, \ as displayed
+      # NOT WORKING
+      shift_1 = @player_board & (@player_board >> rows)
+      shift_1 & (shift_1 >> (2 * rows)) > 0
     end
 
     def backward_diagonal_winner?
-      return true if (@player_board & (@player_board >> (2 * rows)))        # \ check
-    end
-
-    def column_winner?
-      return true if (@player_board & (@player_board >> (2 * (rows + 3))))  # | check
+      # \ check as data is represented, / as displayed
+      # WORKING
+      shift_1 = @player_board & (@player_board >> (rows + 2))
+      shift_1 & (shift_1 >> (2 * (rows + 2))) > 0
     end
 
     def row_winner?
-      return true if (@player_board & (@player_board >> (2 * (rows + 1))))  # - check
+      # | check as data is represented, - as board is displayed
+      # WORKING
+      shift_1 = @player_board & (@player_board >> 1)
+      shift_1 & (shift_1 >> 2) > 0
+    end
+
+    def column_winner?
+      # - check as data is represented, | as board is displayed
+      # WORKING
+      shift_1 = @player_board & (@player_board >> (rows + 1))
+      shift_1 & (shift_1 >> (2 * (rows + 1))) > 0
     end
 
     def find_first_open_row_in_column(row_options)
       row_index = 0
       while(row_index < rows)
         row_board = row_bitboard_for(row_index)
-        return row_board, row_index unless (row_board & row_options)
+        return row_board, row_index unless (row_board & row_options) > 0
         row_index += 1
       end
       fail InvalidMoveError

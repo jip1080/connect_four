@@ -30,7 +30,7 @@ class Game < ActiveRecord::Base
   def update_board(play_hash)
     fail GameOverError unless active?
     col, row = board.do_move(current_player_number, play_hash)
-    if board.win_detected?
+    if board.win_detected?(current_player_number)
       self.completed!
       self.winner = game_players.find { |gp| gp.player_number == board.winner.to_i }.player
     else

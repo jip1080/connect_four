@@ -8,6 +8,10 @@ class Board < ActiveRecord::Base
 
   before_create :initialize_board
 
+  def self.type_list
+    types = ObjectSpace.each_object(Class).select { |klass| klass < self }
+    types.map { |type| type.name.gsub('Boards::', '') }
+  end
   
   def initialize_board
     fail NotImplementediError, '#initialize_board was not defined'

@@ -5,11 +5,14 @@ class GamesController < ApplicationController
 
   def new
     @players = Player.all
+    @board_types = Board.type_list
   end
 
-  # TODO: make this not crappy
+  # TODO: make this not crappy and move majority into game model
   def create
-    b = Boards::BitBoard.new(rows: params[:rows].to_i, columns: params[:columns].to_i)
+    b = Board.new(type: "Boards::#{params['board_type']}",
+                   rows: params[:rows].to_i,
+                   columns: params[:columns].to_i)
     b.save!
     g = Game.new(board: b)
     g.save!
