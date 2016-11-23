@@ -1,6 +1,10 @@
 class PlayersController < ApplicationController
   def index
     @players = Player.all
+    respond_to do |format|
+      format.html { render :index }
+      format.json { render json: @players }
+    end
   end
 
   def new

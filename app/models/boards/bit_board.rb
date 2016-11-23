@@ -18,12 +18,8 @@ module Boards
     ################################################
 
 
-    def initialize_board
-      self.board = [
-        clean_board,
-        clean_board,
-        clean_board
-      ]
+    def initialize_board(player_count)
+      self.board ||= Array.new(player_count + 1) { clean_board }
     end
 
     def clean_board

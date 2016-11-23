@@ -6,14 +6,12 @@ class Board < ActiveRecord::Base
   validates :rows,    numericality: { only_integer: true, greater_than: 0 }
   validates :columns, numericality: { only_integer: true, greater_than: 0 }
 
-  before_create :initialize_board
-
   def self.type_list
     types = ObjectSpace.each_object(Class).select { |klass| klass < self }
     types.map { |type| type.name.gsub('Boards::', '') }
   end
   
-  def initialize_board
+  def initialize_board(player_count)
     fail NotImplementediError, '#initialize_board was not defined'
   end
 

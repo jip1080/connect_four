@@ -8,6 +8,9 @@ $(document).ready(function() {
       case 2:
         color = 'black';
         break;
+      case 3:
+        color = 'blue';
+        break;
       default:
         color = 'white';
     };
@@ -17,7 +20,7 @@ $(document).ready(function() {
   colorizeToken = function(col, row, player_number) {
     token_id = '#token_' + col + '_' + row;
     console.log(token_id);
-    $(token_id).removeClass('red white black');
+    $(token_id).removeClass('red white black blue');
     $(token_id).addClass(selectColor(player_number));
   };
 

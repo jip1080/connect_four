@@ -1,5 +1,6 @@
 <% player1_board = game.board.board[1].to_i %>
 <% player2_board = game.board.board[2].to_i %>
+<% player3_board = game.board.board[3].to_i %>
 <% columns = game.board.columns %>
 <% rows = game.board.rows %>
 <% game.board.columns.times do |col_index| %>
@@ -13,6 +14,7 @@
         <% color = 'white' %>
         <% color = 'red'   if (player1_board & checkboard) > 0 %>
         <% color = 'black' if (player2_board & checkboard) > 0 %>
+        <% color = 'blue' if (player3_board & checkboard) > 0 %>
         <div class='horizontal-line'>
           <div class='token <%= color %>' id='token_<%= col_index %>_<%= rows - row_index - 1 %>'></div>
         </div>

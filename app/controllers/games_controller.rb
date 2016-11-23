@@ -44,6 +44,13 @@ class GamesController < ApplicationController
   end
 
   def game_params
-    params.permit(:board_type, :player1, :player2, :rows, :columns, :player_count)
+    valid_players = [].tap do |players|
+      params[:player_count].to_i.times do |i|
+        players << "player#{ i + 1 }"
+      end
+    end
+    valid_params = [:board_type, :rows, :columns, :player_count]
+    valid_params.push(*valid_players)
+    params.permit(*valid_params)
   end
 end
