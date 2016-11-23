@@ -13,7 +13,7 @@ module Boards
     # is not currently owned
     ################################################
 
-    def initialize_board
+    def initialize_board(player_count)
       self.board = [].tap do |new_board|
         columns.times { new_board << ("0" * rows) }
       end

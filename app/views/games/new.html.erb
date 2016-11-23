@@ -9,18 +9,14 @@
   <input name="rows"/>
   <label>Columns:</label>
   <input name="columns"/>
-  <label>Player1:</label>
-  <select name="player1" id="player1">
-    <% @players.each do |player| %>
-      <option value="<%= player.id %>"><%= player.name %></option>
-    <% end %>
-  </select>
-  <label>Player2:</label>
-  <select name="player2" id="player2">
-    <% @players.each do |player| %>
-      <option value="<%= player.id %>"><%= player.name %></option>
-    <% end %>
-  </select>
-  <input value="Start!" type="submit"/>
+  <br>
+  <div class='players'>
+  </div>
+  <div class='add-player'>
+    Add Player
+  </div>
+  <br>
+  <input id='submit' value="Start!" type="submit" disabled/>
+  <input id='player_count' value=0 name="player_count" type="hidden"/>
 </form>
 <hr>

@@ -10,6 +10,40 @@ class Game < ActiveRecord::Base
 
   enum status: [ :active, :completed ]
 
+  before_create :initialize_board
+  after_create :initialize_game_players
+
+  def params_from_controller(params=nil)
+    @params ||= params
+  end
+
+  def initialize_board
+    self.board ||= Board.create!(type: "Boards::#{@params['board_type']}",
+                                 rows: @params['rows'].to_i,
+                                 columns: @params['columns'].to_i)
+    self.board.initialize_board(@params['player_count'].to_i)
+  end
+
+  def initialize_game_players
+    return true if game_players.count > 0
+    @params['player_count'].to_i.times do |i|
+      player = Player.find(@params["player#{ i + 1 }"])
+      self.game_players << GamePlayer.create!(game: self, player: player, player_number: i + 1)
+    end
+    self.save!
+  end
+
+  def update_board(play_hash)
+    fail GameOverError unless active?
+    col, row = board.do_move(current_player_number, play_hash)
+    game_over? ? finish_game : rotate_turn
+    self.save!
+    return col, row
+  rescue Board::InvalidMoveError => ex
+    Rails.logger.error "Player: #{current_player_number} attempted illegal move"
+    raise
+  end
+
   # modulo rolls to 0, but player numbering starts
   # at 1, so the turn corresponds to 1 less than
   # the player's number. That will be taken into
@@ -23,23 +57,18 @@ class Game < ActiveRecord::Base
     turn + 1
   end
 
-  def rotate_turn
-    self.turn = (self.turn + 1) % players.count
+  private
+
+  def game_over?
+    board.win_detected?(current_player_number)
   end
 
-  def update_board(play_hash)
-    fail GameOverError unless active?
-    col, row = board.do_move(current_player_number, play_hash)
-    if board.win_detected?(current_player_number)
-      self.completed!
-      self.winner = game_players.find { |gp| gp.player_number == board.winner.to_i }.player
-    else
-      rotate_turn
-    end
-    self.save!
-    return col, row
-  rescue Board::InvalidMoveError => ex
-    Rails.logger.error "Player: #{current_player_number} attempted illegal move"
-    raise
+  def finish_game
+    self.completed!
+    self.winner = game_players.find { |gp| gp.player_number == board.winner.to_i }.player
+  end
+
+  def rotate_turn
+    self.turn = (self.turn + 1) % players.count
   end
 end

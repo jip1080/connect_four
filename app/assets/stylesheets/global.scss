@@ -35,6 +35,26 @@ div {
       background: black;
       border-color: black;
     }
+    &.blue {
+      background: blue;
+      border-color: blue;
+    }
+  }
+
+  &.player {
+    margin-top: 5px;
+    font-family: "Comic Sans MS";
+  }
+
+  &.add-player {
+    margin-top: 5px;
+    width: 100px;
+    height: 20px;
+    background-color: #ccc;
+    font-size: 15px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 4px;
   }
 }
 
