@@ -8,20 +8,11 @@ class GamesController < ApplicationController
     @board_types = Board.type_list
   end
 
-  # TODO: make this not crappy and move majority into game model
   def create
-    b = Board.new(type: "Boards::#{params['board_type']}",
-                   rows: params[:rows].to_i,
-                   columns: params[:columns].to_i)
-    b.save!
-    g = Game.new(board: b)
-    g.save!
-    player1 = Player.find(params[:player1])
-    player2 = Player.find(params[:player2])
-    GamePlayer.new(game: g, player: player1, player_number: 1).save!
-    GamePlayer.new(game: g, player: player2, player_number: 2).save!
-    g.reload
-    redirect_to action: :show, id: g.id
+    game = Game.new()
+    game.params_from_controller(game_params)
+    game.save!
+    redirect_to action: :show, id: game.id
   end
 
   def show
@@ -32,7 +23,7 @@ class GamesController < ApplicationController
     game = Game.find(params[:game_id])
     player_num = game.current_player_number
     col, row = game.update_board(update_board_params)
-    response1 = {
+    response = {
       'status': 'success',
       'column': col,
       'row': row,
@@ -41,7 +32,7 @@ class GamesController < ApplicationController
       'win_condition': game.completed?
     }
 
-    render json: response1
+    render json: response
   rescue => ex
     render json: {'status': 'failed'}
   end
@@ -50,5 +41,9 @@ class GamesController < ApplicationController
 
   def update_board_params
     params.permit(:col)
+  end
+
+  def game_params
+    params.permit(:board_type, :player1, :player2, :rows, :columns, :player_count)
   end
 end
