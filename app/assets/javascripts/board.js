@@ -39,15 +39,14 @@ $(document).ready(function() {
       url: game_id + '/update_board',
       data: {'col': this.id},
       type: 'post',
-      success: function(result)
-    {
-      colorizeToken(result.column, result.row, result.player_number);
-      if(result.win_condition === true) {
-        setWinCondition();
-      } else {
-        updateTurnName(result.player_turn);
+      success: function(result) {
+        colorizeToken(result.column, result.row, result.player_number);
+        if(result.win_condition === true) {
+          setWinCondition();
+        } else {
+          updateTurnName(result.player_turn);
+        }
       }
-    }
     });
   });
 })

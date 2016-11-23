@@ -1,4 +1,10 @@
 <form action="/games" method="post">
+  <label>Board Type:</label>
+  <select name="board_type", id="board_type">
+    <% @board_types.each do |board_type| %>
+      <option value="<%= board_type %>"><%= board_type %></option>
+    <% end %>
+  </select>
   <label>Rows:</label>
   <input name="rows"/>
   <label>Columns:</label>

@@ -1,0 +1,22 @@
+<% player1_board = game.board.board[1].to_i %>
+<% player2_board = game.board.board[2].to_i %>
+<% columns = game.board.columns %>
+<% rows = game.board.rows %>
+<% game.board.columns.times do |col_index| %>
+  <div class='float'>
+    <div>
+      <input class='column-select' id='<%= col_index %>'/>
+    </div>
+    <% game.board.rows.times do |row_index| %>
+      <div class='vertical-line'>
+        <% checkboard = ((2**(columns*(rows+1)-1)) >> ((rows - row_index) + (col_index * (rows+1))-1)) %>
+        <% color = 'white' %>
+        <% color = 'red'   if (player1_board & checkboard) > 0 %>
+        <% color = 'black' if (player2_board & checkboard) > 0 %>
+        <div class='horizontal-line'>
+          <div class='token <%= color %>' id='token_<%= col_index %>_<%= rows - row_index - 1 %>'></div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
