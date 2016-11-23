@@ -20,10 +20,14 @@ module Boards
 
     def initialize_board
       self.board = [
-        (2**((rows + 1) * columns)),
-        (2**((rows + 1) * columns)),
-        (2**((rows + 1) * columns))
+        clean_board,
+        clean_board,
+        clean_board
       ]
+    end
+
+    def clean_board
+      (2**((rows + 1) * columns))
     end
 
     def available_moves
@@ -49,7 +53,7 @@ module Boards
     end
 
     def win_detected?(player_number)
-      @player_board = board[player_number].to_i
+      @player_board = board[player_number].to_i - clean_board
       if forward_diagonal_winner? ||
         backward_diagonal_winner? ||
         column_winner? ||
@@ -62,7 +66,7 @@ module Boards
 
     def forward_diagonal_winner?
       # / check as data is represented, \ as displayed
-      # NOT WORKING
+      # WORKING
       shift_1 = @player_board & (@player_board >> rows)
       shift_1 & (shift_1 >> (2 * rows)) > 0
     end
