@@ -21,9 +21,5 @@
 <hr>
 
 <div class="board">
-  <% if @game.board.type == "Boards::BitBoard" %>
-    <%= render partial: '/boards/bit', locals: { game: @game } %>
-  <% else %>
-    <%= render partial: '/boards/string', locals: { game: @game } %>
-  <% end %>
+  <%= render partial: '/boards/bit', locals: { game: @game } %>
 </div>

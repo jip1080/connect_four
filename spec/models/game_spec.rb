@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/../rails_helper'
 describe Game do
   let!(:game) { FactoryGirl.create(:game) }
 
-  let!(:board) { FactoryGirl.create(:string_board, game: game) }
+  let!(:board) { FactoryGirl.create(:bit_board, game: game) }
 
   let!(:player1) { FactoryGirl.create(:player, name: 'player1') }
   let!(:player2) { FactoryGirl.create(:player, name: 'player2') }
