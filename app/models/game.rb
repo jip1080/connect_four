@@ -18,7 +18,7 @@ class Game < ActiveRecord::Base
   end
 
   def initialize_board
-    self.board ||= Board.create!(type: "Boards::#{@params['board_type']}",
+    self.board ||= Board.create!(type: "Boards::BitBoard",
                                  rows: @params['rows'].to_i,
                                  columns: @params['columns'].to_i)
     self.board.initialize_board(@params['player_count'].to_i)

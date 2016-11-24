@@ -5,7 +5,6 @@ class GamesController < ApplicationController
 
   def new
     @players = Player.all
-    @board_types = Board.type_list
   end
 
   def create
@@ -73,7 +72,7 @@ class GamesController < ApplicationController
         players << "player#{ i + 1 }"
       end
     end
-    valid_params = [:board_type, :rows, :columns, :player_count]
+    valid_params = [:rows, :columns, :player_count]
     valid_params.push(*valid_players)
     params.permit(*valid_params)
   end
