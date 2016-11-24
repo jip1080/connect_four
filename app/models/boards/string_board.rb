@@ -19,7 +19,7 @@ module Boards
       end
     end
 
-    def available_moves
+    def available_columns
       [].tap do |open_columns|
         board.each_with_index do |col, index|
           open_columns << index if col.match(/^0.*/).present?
@@ -118,7 +118,7 @@ module Boards
     def validate_move(column)
       fail InvalidMoveError unless column.present?                          # must be present
       fail InvalidMoveError unless column.to_i.to_s == column.to_s          # must be numeric
-      fail InvalidMoveError unless available_moves.include?(column.to_i)  # must be available to play
+      fail InvalidMoveError unless available_columns.include?(column.to_i)  # must be available to play
       true
     end
 

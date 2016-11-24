@@ -15,8 +15,8 @@ class Board < ActiveRecord::Base
     fail NotImplementediError, '#initialize_board was not defined'
   end
 
-  def available_moves
-    fail NotImplementedError, '#available_moves was not defined'
+  def available_columns
+    fail NotImplementedError, '#available_columns was not defined'
   end
 
   def do_move(player_number, play_hash)
@@ -25,6 +25,14 @@ class Board < ActiveRecord::Base
 
   def win_detected?(player_number)
     fail NotImplmentedError, '#win_detected? was not defined'
+  end
+
+  def board_for_player(player_number)
+    fail NotImplementedError, '#board_for_player was not defined'
+  end
+
+  def possible_moves
+    fail NotImplementedError, '#possible_moves was not defined'
   end
 
   def winner
