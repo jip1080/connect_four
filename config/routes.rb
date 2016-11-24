@@ -7,5 +7,6 @@ Rails.application.routes.draw do
 
   resources :games, only: [:index, :new, :create, :show] do
     post '/update_board', to: 'games#update_board'
+    get '/computer_move', to: 'games#computer_move'
   end
 end

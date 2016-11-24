@@ -26,12 +26,14 @@ module Boards
       (2**((rows + 1) * columns))
     end
 
-    def available_columns
+    def available_columns(check_board)
       top_row = row_bitboard_for(rows)
-      avail = top_row & board[0].to_i
+      avail = top_row + check_board
       [].tap do |column_list|
         columns.times do |col_index|
-          column_list << col_index if (avail ^ col_bitboard_for(col_index))
+          if (avail & col_bitboard_for(col_index) ^ col_bitboard_for(col_index)) > 0
+            column_list << col_index
+          end
         end
       end
     end
@@ -56,6 +58,7 @@ module Boards
       fail InvalidMoveError unless valid_move?(selected_column)
       closed_rows = closed_rows_in_column(selected_column)
       row_board, row_index = find_first_open_row_in_column(closed_rows)
+      fail InvalidMoveError unless row_index >= 0
       move_board = row_board & col_bitboard_for(selected_column)
       update_board(0, move_board)
       update_board(player_number, move_board)
@@ -134,7 +137,7 @@ module Boards
         return row_board, row_index unless (row_board & row_options) > 0
         row_index += 1
       end
-      fail InvalidMoveError
+      return 0, -1
     end
 
     def closed_rows_in_column(selected_column)
@@ -143,7 +146,8 @@ module Boards
     end
 
     def valid_move?(selected_column)
-      available_columns.include?(selected_column)
+      avail_board = board[0].to_i
+      available_columns(avail_board).include?(selected_column)
     end
 
     def col_bitboard_for(col)

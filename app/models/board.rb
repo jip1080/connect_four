@@ -15,7 +15,7 @@ class Board < ActiveRecord::Base
     fail NotImplementediError, '#initialize_board was not defined'
   end
 
-  def available_columns
+  def available_columns(check_board)
     fail NotImplementedError, '#available_columns was not defined'
   end
 
