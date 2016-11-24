@@ -26,66 +26,108 @@ module Boards
       (2**((rows + 1) * columns))
     end
 
-    def available_moves
+    def available_columns(check_board)
       top_row = row_bitboard_for(rows)
-      avail = top_row & board[0].to_i
-      [].tap do |available_columns|
+      avail = top_row + check_board
+      [].tap do |column_list|
         columns.times do |col_index|
-          available_columns << col_index if (avail ^ col_bitboard_for(col_index))
+          if (avail & col_bitboard_for(col_index) ^ col_bitboard_for(col_index)) > 0
+            column_list << col_index
+          end
         end
       end
     end
 
+    def possible_moves
+      base_board = 0
+      columns.times do |col_index|
+        closed_rows = closed_rows_in_column(col_index)
+        row_board, row_index = find_first_open_row_in_column(closed_rows)
+        move_board = row_board & col_bitboard_for(col_index)
+        base_board = base_board + move_board
+      end
+      base_board
+    end
+
+    def board_for_player(player_number)
+      board[player_number].to_i
+    end
+
     def do_move(player_number, play_hash)
-      @move = play_hash['col'].to_i
-      fail InvalidMoveError unless valid_move?
-      closed_rows = closed_rows_in_column
+      selected_column = play_hash['col'].to_i
+      fail InvalidMoveError unless valid_move?(selected_column)
+      closed_rows = closed_rows_in_column(selected_column)
       row_board, row_index = find_first_open_row_in_column(closed_rows)
-      move_board = row_board & col_bitboard_for(@move)
-      board[0] = board[0].to_i + move_board
-      board[player_number] = board[player_number].to_i + move_board
+      fail InvalidMoveError unless row_index >= 0
+      move_board = row_board & col_bitboard_for(selected_column)
+      update_board(0, move_board)
+      update_board(player_number, move_board)
       self.save
-      return @move, row_index
+      return selected_column, row_index
+    end
+
+    def update_board(board_index, move_board)
+      board[board_index] = board[board_index].to_i + move_board
     end
 
     def win_detected?(player_number)
-      @player_board = board[player_number].to_i - clean_board
-      if forward_diagonal_winner? ||
-        backward_diagonal_winner? ||
-        column_winner? ||
-        row_winner?
+      player_board = board[player_number].to_i - clean_board
+      if check_for_win(player_board)
         @winner = player_number
         return true
       end
       false 
     end
 
-    def forward_diagonal_winner?
+    def check_for_win(player_board)
+      forward_diagonal_winner?(player_board) ||
+        backward_diagonal_winner?(player_board) ||
+        column_winner?(player_board) ||
+        row_winner?(player_board)
+    end
+
+    def forward_diagonal_winner?(player_board)
       # / check as data is represented, \ as displayed
       # WORKING
-      shift_1 = @player_board & (@player_board >> rows)
+      shift_1 = player_board & (player_board >> rows)
       shift_1 & (shift_1 >> (2 * rows)) > 0
     end
 
-    def backward_diagonal_winner?
+    def backward_diagonal_winner?(player_board)
       # \ check as data is represented, / as displayed
       # WORKING
-      shift_1 = @player_board & (@player_board >> (rows + 2))
+      shift_1 = player_board & (player_board >> (rows + 2))
       shift_1 & (shift_1 >> (2 * (rows + 2))) > 0
     end
 
-    def row_winner?
+    def row_winner?(player_board)
       # | check as data is represented, - as board is displayed
       # WORKING
-      shift_1 = @player_board & (@player_board >> 1)
+      shift_1 = player_board & (player_board >> 1)
       shift_1 & (shift_1 >> 2) > 0
     end
 
-    def column_winner?
+    def column_winner?(player_board)
       # - check as data is represented, | as board is displayed
       # WORKING
-      shift_1 = @player_board & (@player_board >> (rows + 1))
+      shift_1 = player_board & (player_board >> (rows + 1))
       shift_1 & (shift_1 >> (2 * (rows + 1))) > 0
+    end
+
+    def forward_diagonal_shift(player_board, rotations)
+      player_board >> (rows * rotations)
+    end
+    
+    def backward_diagonal_shift(player_board, rotations)
+      player_board >> ((rows + 2) * rotations)
+    end
+
+    def column_shift(player_board, rotations)
+      player_board >> ((rows + 1) * rotations)
+    end
+    
+    def row_shift(player_board, rotations)
+      player_board >> (1 * rotations)
     end
 
     def find_first_open_row_in_column(row_options)
@@ -95,16 +137,17 @@ module Boards
         return row_board, row_index unless (row_board & row_options) > 0
         row_index += 1
       end
-      fail InvalidMoveError
+      return 0, -1
     end
 
-    def closed_rows_in_column
-      col_board = col_bitboard_for(@move)
+    def closed_rows_in_column(selected_column)
+      col_board = col_bitboard_for(selected_column)
       col_board & board[0].to_i
     end
 
-    def valid_move?
-      available_moves.include?(@move)
+    def valid_move?(selected_column)
+      avail_board = board[0].to_i
+      available_columns(avail_board).include?(selected_column)
     end
 
     def col_bitboard_for(col)

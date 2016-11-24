@@ -35,6 +35,24 @@ $(document).ready(function() {
     $('#status')[0].innerText = 'Completed';
   };
 
+  callForComputerMove = function() {
+    var game_id = $('#game_id')[0].innerText;
+    $.ajax
+      ({
+        url: game_id + '/computer_move',
+        type: 'get',
+        dataType: 'json',
+        success: function(result) {
+          colorizeToken(result.column, result.row, result.player_number);
+          if(result.win_condition === true) {
+            setWinCondition();
+          } else {
+            updateTurnName(result.player_turn);
+          }
+        }
+      });
+  };
+
   $('.column-select').click(function(e) {
     var game_id = $('#game_id')[0].innerText;
     $.ajax
@@ -48,6 +66,9 @@ $(document).ready(function() {
           setWinCondition();
         } else {
           updateTurnName(result.player_turn);
+          if(result.computer_move === true) {
+            callForComputerMove();
+          }
         }
       }
     });

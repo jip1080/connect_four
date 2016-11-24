@@ -20,24 +20,48 @@ class GamesController < ApplicationController
   end
 
   def update_board
-    game = Game.find(params[:game_id])
+    game = game_board
     player_num = game.current_player_number
     col, row = game.update_board(update_board_params)
     response = {
-      'status': 'success',
-      'column': col,
-      'row': row,
-      'player_number': player_num,
-      'player_turn': game.current_player.name,
-      'win_condition': game.completed?
+      status: 'success',
+      column: col,
+      row: row,
+      player_number: player_num,
+      player_turn: game.current_player.name,
+      win_condition: game.completed?,
+      computer_move: game.computer_move?
     }
 
     render json: response
   rescue => ex
-    render json: {'status': 'failed'}
+    render json: { status: 'failed' }
+  end
+
+  def computer_move
+    game = game_board
+    player_num = game.current_player_number
+    ai = BasicAi.new(game, player_num)
+    col, row = ai.do_move
+    response = {
+      status: 'success',
+      column: col,
+      row: row,
+      player_number: player_num,
+      player_turn: game.current_player.name,
+      win_condition: game.completed?,
+      computer_move: false
+    }
+    render json: response
+  rescue => ex
+    render json: { status: 'failed' }
   end
 
   private
+
+  def game_board
+    Game.find(params[:game_id])
+  end
 
   def update_board_params
     params.permit(:col)

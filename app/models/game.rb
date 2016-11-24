@@ -57,6 +57,14 @@ class Game < ActiveRecord::Base
     turn + 1
   end
 
+  def board_for_player(player_number)
+    board.board_for_player(player_number).to_i
+  end
+
+  def computer_move?
+    current_player.computer?
+  end
+
   private
 
   def game_over?

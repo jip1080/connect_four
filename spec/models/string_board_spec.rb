@@ -25,12 +25,12 @@ describe Boards::StringBoard do
     end
   end
 
-  context '#available_moves' do
+  context '#available_columns' do
     let(:string_board) { FactoryGirl.create(:string_board, rows: 4, columns: 4) }
 
     it 'returns the only the open columns' do
       string_board.board = ["0000", "1212", "1234", "0121"]
-      expect(string_board.available_moves).to match_array([0,3])
+      expect(string_board.available_columns).to match_array([0,3])
     end
   end
 
