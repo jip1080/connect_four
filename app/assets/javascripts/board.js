@@ -1,10 +1,6 @@
 $(document).ready(function() {
   $('.ai-thinking').hide();
 
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
   selectColor = function(player_number) {
     switch(player_number) {
       case 1:
@@ -60,7 +56,6 @@ $(document).ready(function() {
         success: function(result) {
           $('.ai-thinking').hide(function() {
             $('.board').show(function() {
-              sleep(200);
               colorizeToken(result.column, result.row, result.player_number);
             });
           });
@@ -93,7 +88,6 @@ $(document).ready(function() {
         } else {
           updateTurnName(result.player_turn);
           if(result.computer_move === true) {
-            sleep(900);
             callForComputerMove();
           }
         }
