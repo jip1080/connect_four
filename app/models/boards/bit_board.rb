@@ -26,6 +26,45 @@ module Boards
       (2**((rows + 1) * columns))
     end
 
+    
+    def board_for_player(player_number)
+      board[player_number].to_i
+    end
+
+    def do_move(player_number, play_hash)
+      selected_column = play_hash['col'].to_i
+      fail InvalidMoveError unless valid_move?(selected_column)
+      new_boards = determine_updated_boards(board[0].to_i, board[player_number].to_i, selected_column)
+      update_board(0, new_boards[0])
+      update_board(player_number, new_boards[1])
+      self.save
+      return selected_column, new_boards[2]
+    end
+
+    # returns an updated available_board, player_board
+    # and the row index where the play happened
+    def determine_updated_boards(available_board, player_board, col_index)
+      closed_rows = closed_rows_in_column(available_board, col_index)
+      row_board, row_index = find_first_open_row_in_column(closed_rows)
+      fail InvalidMoveError unless row_index >= 0
+      move_board = build_move_board(col_index, row_index)
+      available_board = available_board + move_board
+      player_board = player_board + move_board
+      return [available_board, player_board, row_index]
+    end
+
+    def update_board(board_index, new_board)
+      board[board_index] = new_board
+    end
+
+    #-------HELPERS------
+    # Helper methods below this
+    # point should not operate on
+    # current board state, but
+    # rather operate on boards
+    # passed in.
+    #-------HELPERS------
+
     def available_columns(check_board)
       top_row = row_bitboard_for(rows)
       avail = top_row + check_board
@@ -38,36 +77,19 @@ module Boards
       end
     end
 
-    def possible_moves
+    def build_move_board(col_index, row_index)
+      col_bitboard_for(col_index) & row_bitboard_for(row_index)
+    end
+
+    def possible_moves(check_board)
       base_board = 0
       columns.times do |col_index|
-        closed_rows = closed_rows_in_column(col_index)
+        closed_rows = closed_rows_in_column(check_board, col_index)
         row_board, row_index = find_first_open_row_in_column(closed_rows)
-        move_board = row_board & col_bitboard_for(col_index)
+        move_board = build_move_board(col_index, row_index)
         base_board = base_board + move_board
       end
       base_board
-    end
-
-    def board_for_player(player_number)
-      board[player_number].to_i
-    end
-
-    def do_move(player_number, play_hash)
-      selected_column = play_hash['col'].to_i
-      fail InvalidMoveError unless valid_move?(selected_column)
-      closed_rows = closed_rows_in_column(selected_column)
-      row_board, row_index = find_first_open_row_in_column(closed_rows)
-      fail InvalidMoveError unless row_index >= 0
-      move_board = row_board & col_bitboard_for(selected_column)
-      update_board(0, move_board)
-      update_board(player_number, move_board)
-      self.save
-      return selected_column, row_index
-    end
-
-    def update_board(board_index, move_board)
-      board[board_index] = board[board_index].to_i + move_board
     end
 
     def win_detected?(player_number)
@@ -88,28 +110,24 @@ module Boards
 
     def forward_diagonal_winner?(player_board)
       # / check as data is represented, \ as displayed
-      # WORKING
       shift_1 = player_board & (player_board >> rows)
       shift_1 & (shift_1 >> (2 * rows)) > 0
     end
 
     def backward_diagonal_winner?(player_board)
       # \ check as data is represented, / as displayed
-      # WORKING
       shift_1 = player_board & (player_board >> (rows + 2))
       shift_1 & (shift_1 >> (2 * (rows + 2))) > 0
     end
 
     def row_winner?(player_board)
       # | check as data is represented, - as board is displayed
-      # WORKING
       shift_1 = player_board & (player_board >> 1)
       shift_1 & (shift_1 >> 2) > 0
     end
 
     def column_winner?(player_board)
       # - check as data is represented, | as board is displayed
-      # WORKING
       shift_1 = player_board & (player_board >> (rows + 1))
       shift_1 & (shift_1 >> (2 * (rows + 1))) > 0
     end
@@ -140,9 +158,9 @@ module Boards
       return 0, -1
     end
 
-    def closed_rows_in_column(selected_column)
+    def closed_rows_in_column(check_board, selected_column)
       col_board = col_bitboard_for(selected_column)
-      col_board & board[0].to_i
+      col_board & check_board
     end
 
     def valid_move?(selected_column)

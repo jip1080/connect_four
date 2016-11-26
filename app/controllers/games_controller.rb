@@ -34,13 +34,14 @@ class GamesController < ApplicationController
 
     render json: response
   rescue => ex
+    binding.pry
     render json: { status: 'failed' }
   end
 
   def computer_move
     game = game_board
     player_num = game.current_player_number
-    ai = BasicAi.new(game, player_num)
+    ai = Ais::AdvancedAi.new(game, player_num)
     col, row = ai.do_move
     response = {
       status: 'success',
@@ -53,6 +54,7 @@ class GamesController < ApplicationController
     }
     render json: response
   rescue => ex
+    binding.pry
     render json: { status: 'failed' }
   end
 
