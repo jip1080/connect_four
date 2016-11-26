@@ -9,6 +9,8 @@ class Ai
 
   def do_move
     determine_move
+    Rails.logger.info "\n\n\nAvail Move: #{@game_board.available_columns(@game_board.board[0].to_i)}"
+    Rails.logger.info "\n\n\nAI MOVE: #{@suggested_move}\n\n"
     @game_board.game.update_board({'col' => @suggested_move.to_s})
   end
 
