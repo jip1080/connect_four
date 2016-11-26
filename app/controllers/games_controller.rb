@@ -34,7 +34,6 @@ class GamesController < ApplicationController
 
     render json: response
   rescue => ex
-    binding.pry
     render json: { status: 'failed' }
   end
 
@@ -54,7 +53,6 @@ class GamesController < ApplicationController
     }
     render json: response
   rescue => ex
-    binding.pry
     render json: { status: 'failed' }
   end
 

@@ -16,7 +16,7 @@ namespace :seed_ai_players do
   end
 
   task :delete_all => :environment do
-    Players.where(computer: true).each do |ai|
+    Player.where(computer: true).each do |ai|
       ai.destroy
     end
   end
