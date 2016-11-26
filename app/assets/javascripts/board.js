@@ -1,4 +1,9 @@
 $(document).ready(function() {
+  $('.ai-thinking').hide();
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   selectColor = function(player_number) {
     switch(player_number) {
@@ -34,8 +39,18 @@ $(document).ready(function() {
     $('#winner').prop('disabled', false);
     $('#status')[0].innerText = 'Completed';
   };
+  
+  setDrawCondition = function() {
+    $('.column-select').prop('disabled', true);
+    $('#winner_name')[0].innerText = 'Draw';
+    $('#winner').prop('disabled', false);
+    $('#status')[0].innerText = 'Completed';
+  };
+
 
   callForComputerMove = function() {
+    $('.board').hide();
+    $('.ai-thinking').show();
     var game_id = $('#game_id')[0].innerText;
     $.ajax
       ({
@@ -43,9 +58,18 @@ $(document).ready(function() {
         type: 'get',
         dataType: 'json',
         success: function(result) {
-          colorizeToken(result.column, result.row, result.player_number);
+          $('.ai-thinking').hide(function() {
+            $('.board').show(function() {
+              sleep(200);
+              colorizeToken(result.column, result.row, result.player_number);
+            });
+          });
           if(result.win_condition === true) {
+            $('.ai-thinking').hide();
+            $('.board').show();
             setWinCondition();
+          } else if (result.draw_condition === true) {
+            setDrawCondition();
           } else {
             updateTurnName(result.player_turn);
           }
@@ -64,13 +88,20 @@ $(document).ready(function() {
         colorizeToken(result.column, result.row, result.player_number);
         if(result.win_condition === true) {
           setWinCondition();
+        } else if (result.draw_condition === true) {
+          setDrawCondition();
         } else {
           updateTurnName(result.player_turn);
           if(result.computer_move === true) {
+            sleep(900);
             callForComputerMove();
           }
         }
       }
     });
   });
+
+  if ($('.ai-first').length > 0) {
+    callForComputerMove();
+  };
 })

@@ -20,6 +20,12 @@
 <div class='clear'></div>
 <hr>
 
+<div class='ai-thinking'>
+  <%= image_tag 'ponder.jpg' %>
+</div>
 <div class="board">
   <%= render partial: '/boards/bit', locals: { game: @game } %>
 </div>
+<% if @game.current_player.computer? %>
+  <div class="ai-first"></div>
+<% end %>

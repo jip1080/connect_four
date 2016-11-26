@@ -28,7 +28,8 @@ class GamesController < ApplicationController
       row: row,
       player_number: player_num,
       player_turn: game.current_player.name,
-      win_condition: game.completed?,
+      win_condition: game.completed? && game.winner.present?,
+      draw_condition: game.completed? && !game.winner.present?,
       computer_move: game.computer_move?
     }
 
@@ -49,7 +50,8 @@ class GamesController < ApplicationController
       row: row,
       player_number: player_num,
       player_turn: game.current_player.name,
-      win_condition: game.completed?,
+      win_condition: game.completed? && game.winner.present?,
+      draw_condition: game.completed? && !game.winner.present?,
       computer_move: false
     }
     render json: response

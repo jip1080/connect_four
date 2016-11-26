@@ -26,6 +26,9 @@ module Boards
       (2**((rows + 1) * columns))
     end
 
+    def draw_detected?(check_board)
+      (check_board + row_bitboard_for(rows)) ^ (clean_board - 1) == 0
+    end
     
     def board_for_player(player_number)
       board[player_number].to_i

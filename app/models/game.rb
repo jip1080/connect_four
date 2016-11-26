@@ -68,12 +68,15 @@ class Game < ActiveRecord::Base
   private
 
   def game_over?
-    board.win_detected?(current_player_number)
+    board.win_detected?(current_player_number) ||
+      board.draw_detected?(board.board[0].to_i - board.clean_board)
   end
 
   def finish_game
     self.completed!
-    self.winner = game_players.find { |gp| gp.player_number == board.winner.to_i }.player
+    if board.winner
+      self.winner = game_players.find { |gp| gp.player_number == board.winner.to_i }.player
+    end
   end
 
   def rotate_turn
