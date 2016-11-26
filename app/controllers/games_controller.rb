@@ -39,8 +39,9 @@ class GamesController < ApplicationController
 
   def computer_move
     game = game_board
+    player = game.current_player
     player_num = game.current_player_number
-    ai = Ais::AdvancedAi.new(game, player_num)
+    ai = player.ai_type.constantize.new(game, player_num)
     col, row = ai.do_move
     response = {
       status: 'success',
