@@ -12,7 +12,7 @@ class Board < ActiveRecord::Base
   end
   
   def initialize_board(player_count)
-    fail NotImplementediError, '#initialize_board was not defined'
+    fail NotImplementedError, '#initialize_board was not defined'
   end
 
   def available_columns(check_board)
