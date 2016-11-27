@@ -50,7 +50,7 @@ module Ais
 
     def determine_optimal_move
       populate_win_loss_counts
-      select_optimal_move 
+      select_optimal_move unless @suggested_move
     end
 
     def select_optimal_move

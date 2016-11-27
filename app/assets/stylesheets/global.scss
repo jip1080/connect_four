@@ -80,6 +80,11 @@ input {
     border-left: 2vw solid transparent;
     border-right: 2vw solid transparent;
     border-top: 2vw solid #f00;
+
+    &.enabled {
+      cursor: pointer;
+      cursor: hand;
+    }
   }
 }
 

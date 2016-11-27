@@ -6,7 +6,7 @@
 <% game.board.columns.times do |col_index| %>
   <div class='float'>
     <div>
-      <input class='column-select' id='<%= col_index %>'/>
+      <input class='column-select enabled' id='<%= col_index %>'/>
     </div>
     <% game.board.rows.times do |row_index| %>
       <div class='vertical-line'>

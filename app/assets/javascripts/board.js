@@ -31,6 +31,7 @@ $(document).ready(function() {
 
   setWinCondition = function() {
     $('.column-select').prop('disabled', true);
+    $('.column-select').removeClass('enabled');
     $('#winner_name')[0].innerText = $('#player_turn')[0].innerText;
     $('#winner').prop('disabled', false);
     $('#status')[0].innerText = 'Completed';
@@ -38,6 +39,7 @@ $(document).ready(function() {
   
   setDrawCondition = function() {
     $('.column-select').prop('disabled', true);
+    $('.column-select').removeClass('enabled');
     $('#winner_name')[0].innerText = 'Draw';
     $('#winner').prop('disabled', false);
     $('#status')[0].innerText = 'Completed';
