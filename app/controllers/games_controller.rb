@@ -51,7 +51,7 @@ class GamesController < ApplicationController
       player_turn:    game.current_player.name,
       win_condition:  game.completed? && game.winner.present?,
       draw_condition: game.completed? && !game.winner.present?,
-      computer_move:  false
+      computer_move:  game.computer_move?
     }
   end
 
