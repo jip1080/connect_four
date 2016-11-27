@@ -73,12 +73,12 @@ module Ais
 
     def populate_win_loss_counts
       return optimal_first_move if empty_board?
-      moves_options = initial_available
-      moves_count = moves_options.size
+      move_options = initial_available
+      moves_count = move_options.size
       moves_count.times do |option_index|
         #bias toward the middle of the board since that has the highest win likelihood
         selected_index = ((moves_count/2).ceil + option_index) % moves_count
-        selected_col = moves_options[selected_index]
+        selected_col = move_options[selected_index]
         results = @game_board.determine_updated_boards(@game_board.board[0].to_i,
                                                        @game_board.board[@me].to_i,
                                                        selected_col)
@@ -98,8 +98,8 @@ module Ais
     end
 
     def calculate_deeper_moves(avail_board, my_board, opponent_board, starting_move, current_depth, whose_turn)
-      moves_options = @game_board.available_columns(avail_board)
-      moves_count = moves_options.size
+      move_options = @game_board.available_columns(avail_board)
+      moves_count = move_options.size
       moves_count.times do |i|
         selected_col = determine_selected_column(move_options, i)
         new_boards = update_board(whose_turn, avail_board, my_board, opponent_board, selected_col)
@@ -113,7 +113,7 @@ module Ais
 
     def determine_selected_column(move_options, offset)
       selected_index = select_index(move_options.count, offset)
-      moves_options[selected_index]
+      move_options[selected_index]
     end
 
     def update_board(whose_turn, avail_board, my_board, opponent_board, selected_col)

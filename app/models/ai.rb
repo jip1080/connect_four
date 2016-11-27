@@ -11,7 +11,8 @@ class Ai
     determine_move
     @game_board.game.update_board({'col' => @suggested_move.to_s})
   rescue => ex
-    binding.pry
+    # Need more debugging on why the failed move from
+    # the AI from time to time...
   end
 
   def suggested_move
