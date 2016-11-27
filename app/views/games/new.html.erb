@@ -1,5 +1,5 @@
 <%= javascript_include_tag 'game_setup.js' %>
-<form action="/games" method="post">
+<form name='new_game' action='/games' onsubmit='return validateForm()' method='post'>
   <label>Board Type:</label>
   <label>Rows:</label>
   <input name="rows" value='6'/>

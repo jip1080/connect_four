@@ -33,9 +33,26 @@ $(document).ready(function() {
    $('#player_count').val(player_count);
    if(player_count >= 2) {
      $('#submit').prop('disabled', false);
+     $('.add-player').hide();
    }
  });
 
-  fetch_player_list();
+ fetch_player_list();
 
+ validateFormInput = function(field_name) {
+   var obj = document.forms['new_game'][field_name].value;
+   if (isNaN(obj) || (obj < 4) || (obj > 8)) {
+    alert(name + " must be a number greater than 3, less than 9" );
+    return false;
+   }
+   return true;
+ };
+
+ validateForm = function() {
+   var status = validateFormInput('rows');
+   if(status === true) {
+     status = validateFormInput('columns');
+     }
+   return status;
+ }
 })

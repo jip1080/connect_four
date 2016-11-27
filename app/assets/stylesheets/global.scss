@@ -1,4 +1,7 @@
+
 div {
+  font-family: "Arial, Helvetica, sans-serif";
+
   &.float {
     float: left;
   }
@@ -43,7 +46,6 @@ div {
 
   &.player {
     margin-top: 5px;
-    font-family: "Comic Sans MS";
   }
 
   &.add-player {
