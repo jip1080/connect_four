@@ -1,6 +1,14 @@
 == Connect Four
 
 Connect Four is a two player strategy game where players take turns dropping
-colored discs into a six row by seven column grid.  The first player to
-connect four or more discs of their color in a line wins.  The line may be
+colored discs into a six row by seven column grid. The first player to
+connect four or more discs of their color in a line wins. The line may be
 horizontal, vertical or diagonal.
+
+This implementation of Connect Four uses a bitboard to store the current state of the board. Actually, it uses multiple bitboards. One to store the available columns and one bitboard for each player's moves. Since we can shift bits very quickly programatically and can quickly do bitwise comparisons, checking the state of the game is very quick. However, the math to do all of this programatically can be somewhat complex.
+
+What does a bitboard look like?
+```ruby
+0
+```
+Not very interesting.
