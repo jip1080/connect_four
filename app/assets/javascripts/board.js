@@ -69,6 +69,9 @@ $(document).ready(function() {
             setDrawCondition();
           } else {
             updateTurnName(result.player_turn);
+            if(result.computer_move === true) {
+              callForComputerMove();
+            };
           }
         }
       });
