@@ -1,6 +1,0 @@
-== Connect Four
-
-Connect Four is a two player strategy game where players take turns dropping
-colored discs into a six row by seven column grid.  The first player to
-connect four or more discs of their color in a line wins.  The line may be
-horizontal, vertical or diagonal.
