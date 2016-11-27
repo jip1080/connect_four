@@ -22,17 +22,7 @@ class GamesController < ApplicationController
     game = game_board
     player_num = game.current_player_number
     col, row = game.update_board(update_board_params)
-    response = {
-      status: 'success',
-      column: col,
-      row: row,
-      player_number: player_num,
-      player_turn: game.current_player.name,
-      win_condition: game.completed? && game.winner.present?,
-      draw_condition: game.completed? && !game.winner.present?,
-      computer_move: game.computer_move?
-    }
-
+    response = build_play_response(game, player_num, col, row)
     render json: response
   rescue => ex
     render json: { status: 'failed' }
@@ -44,22 +34,26 @@ class GamesController < ApplicationController
     player_num = game.current_player_number
     ai = player.ai_type.constantize.new(game, player_num)
     col, row = ai.do_move
-    response = {
-      status: 'success',
-      column: col,
-      row: row,
-      player_number: player_num,
-      player_turn: game.current_player.name,
-      win_condition: game.completed? && game.winner.present?,
-      draw_condition: game.completed? && !game.winner.present?,
-      computer_move: false
-    }
+    response = build_play_response(game, player_num, col, row) 
     render json: response
   rescue => ex
     render json: { status: 'failed' }
   end
 
   private
+
+  def build_play_response(game, player_num, col, row)
+    response = {
+      status:         'success',
+      column:         col,
+      row:            row,
+      player_number:  player_num,
+      player_turn:    game.current_player.name,
+      win_condition:  game.completed? && game.winner.present?,
+      draw_condition: game.completed? && !game.winner.present?,
+      computer_move:  false
+    }
+  end
 
   def game_board
     Game.find(params[:game_id])

@@ -3,15 +3,15 @@ class Ai
 
   def initialize(game, my_player_number)
     @game_board = game.board
-    @my_board = game.board_for_player(my_player_number)
-    @me = my_player_number
+    @my_board   = game.board_for_player(my_player_number)
+    @me         = my_player_number
   end
 
   def do_move
     determine_move
-    Rails.logger.info "\n\n\nAvail Move: #{@game_board.available_columns(@game_board.board[0].to_i)}"
-    Rails.logger.info "\n\n\nAI MOVE: #{@suggested_move}\n\n"
     @game_board.game.update_board({'col' => @suggested_move.to_s})
+  rescue => ex
+    binding.pry
   end
 
   def suggested_move
@@ -24,18 +24,27 @@ class Ai
       determine_optimal_move
   end
 
-  #private
+  private
+
+  def one_move_threat?
+    @game_board.board.each_with_index do |board, index|
+      next if index == 0
+      next if index == @me
+      @suggested_move = find_winning_move(board.to_i)
+      return true if @suggested_move
+    end
+    false
+  end
 
   def winning_move?(board)
     @suggested_move ||= find_winning_move(board)
     @suggested_move.present?
   end
   
-  # calculates column of first possible winning
-  # move
   def find_winning_move(board)
+    options = possible_moves(@game_board.board[0].to_i)
     @game_board.available_columns(board).each do |col_index|
-      move_option = possible_moves(@game_board.board[0].to_i) & @game_board.col_bitboard_for(col_index)
+      move_option = options & @game_board.col_bitboard_for(col_index)
       return col_index if @game_board.check_for_win(move_option + board) 
     end
     nil

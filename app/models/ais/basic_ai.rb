@@ -4,13 +4,7 @@ module Ais
     private
 
     def imminent_threats?
-      @game_board.board.each_with_index do |board, index|
-        next if index == 0
-        next if index == @me
-        @suggested_move = find_winning_move(board.to_i)
-        return true if @suggested_move
-      end
-      false
+      one_move_threat?
     end
 
     def determine_optimal_move

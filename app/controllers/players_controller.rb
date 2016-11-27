@@ -7,9 +7,6 @@ class PlayersController < ApplicationController
     end
   end
 
-  def new
-  end
-
   def create
     Player.create(player_params)
     redirect_to action: :index

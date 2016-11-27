@@ -44,11 +44,6 @@ class Game < ActiveRecord::Base
     raise
   end
 
-  # modulo rolls to 0, but player numbering starts
-  # at 1, so the turn corresponds to 1 less than
-  # the player's number. That will be taken into
-  # account in many calculations
-
   def current_player
     game_players.find { |gp| gp.player_number == (turn + 1) }.player
   end

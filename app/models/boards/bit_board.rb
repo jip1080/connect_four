@@ -26,10 +26,6 @@ module Boards
       (2**((rows + 1) * columns))
     end
 
-    def draw_detected?(check_board)
-      (check_board + row_bitboard_for(rows)) ^ (clean_board - 1) == 0
-    end
-    
     def board_for_player(player_number)
       board[player_number].to_i
     end
@@ -44,8 +40,22 @@ module Boards
       return selected_column, new_boards[2]
     end
 
-    # returns an updated available_board, player_board
-    # and the row index where the play happened
+    def update_board(board_index, new_board)
+      board[board_index] = new_board
+    end
+
+    #-------HELPERS------
+    # Helper methods below this
+    # point should not operate on
+    # current board state, but
+    # rather operate on boards
+    # passed in. Allows for AI
+    # gameplay.
+    #-------HELPERS------
+
+    # returns an updated copy of available_board,
+    # player_board and the row index where the play
+    # happened
     def determine_updated_boards(available_board, player_board, col_index)
       closed_rows = closed_rows_in_column(available_board, col_index)
       row_board, row_index = find_first_open_row_in_column(closed_rows)
@@ -56,18 +66,11 @@ module Boards
       return [available_board, player_board, row_index]
     end
 
-    def update_board(board_index, new_board)
-      board[board_index] = new_board
+
+    def draw_detected?(check_board)
+      (check_board + row_bitboard_for(rows)) ^ (clean_board - 1) == 0
     end
-
-    #-------HELPERS------
-    # Helper methods below this
-    # point should not operate on
-    # current board state, but
-    # rather operate on boards
-    # passed in.
-    #-------HELPERS------
-
+    
     def available_columns(check_board)
       top_row = row_bitboard_for(rows)
       avail = top_row + check_board
